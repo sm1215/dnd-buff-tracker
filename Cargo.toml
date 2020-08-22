@@ -1,0 +1,16 @@
+[package]
+name = "dnd-buff-tracker"
+version = "0.1.0"
+authors = ["Sam Miller <sm1215@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = "2.0"
+actix-rt = "1.0"
+tera = "0.11"
+listenfd = "0.3"
+serde = "1.0"
+serde_json = "1.0"
+state = "0.4"
