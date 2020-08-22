@@ -3,6 +3,7 @@ use tera::{Tera, Context};
 use listenfd::ListenFd;
 mod characters;
 
+// For rendering to templates
 async fn render_tmpl(data: web::Data<AppData>, req:HttpRequest) -> impl Responder {
     let name = req.match_info().get("name").unwrap();
     let mut ctx = Context::new();
@@ -11,6 +12,7 @@ async fn render_tmpl(data: web::Data<AppData>, req:HttpRequest) -> impl Responde
     HttpResponse::Ok().body(rendered)
 }
 
+// For rendering to templates
 struct AppData {
     tmpl: Tera
 }
@@ -39,5 +41,4 @@ async fn main() -> std::io::Result<()> {
         server.bind("127.0.0.1:7000")?
     };
     server.run().await
-
 }
