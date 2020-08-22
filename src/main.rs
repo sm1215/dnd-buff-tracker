@@ -30,7 +30,7 @@ async fn main() -> std::io::Result<()> {
         
         App::new()
             .data(AppData {tmpl: tera})
-            // .configure(characters::init_routes)
+            .configure(characters::init_routes)
     });
 
     server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
