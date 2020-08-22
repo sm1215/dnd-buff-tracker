@@ -18,12 +18,12 @@ async fn find_all() -> impl Responder {
 
 #[get("/characters/{id}")]
 async fn find() -> impl Responder {
-  HttpResponse::Ok().json(User {
+  HttpResponse::Ok().json(
     Character {
       id: 1,
       name: String::from("Osel Mon"),
     },
-  })
+  )
 }
 
 pub fn init_routes(config: &mut web::ServiceConfig) {
