@@ -1,7 +1,6 @@
 use actix_web::{web, App, HttpServer, HttpRequest, HttpResponse, Responder};
 use tera::{Tera, Context};
 use listenfd::ListenFd;
-mod characters;
 
 // For rendering to templates
 async fn render_tmpl(data: web::Data<AppData>, req:HttpRequest) -> impl Responder {
@@ -32,7 +31,7 @@ async fn main() -> std::io::Result<()> {
         
         App::new()
             .data(AppData {tmpl: tera})
-            .configure(characters::init_routes)
+            // .configure(characters::init_routes)
     });
 
     server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
