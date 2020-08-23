@@ -23,7 +23,7 @@ pub fn insert_new_character(
   // prevent collision with `name` column imported inside the function
   nm: &str,
   conn: &SqliteConnection,
-) -> Result<models::User, diesel::result::Error> {
+) -> Result<models::Character, diesel::result::Error> {
   // It is common when using Diesl with Actix to import schema-related
   // modules inside a function's scope (rather than the normal module's scope)
   // to prevent import collisions and namespace pollution.actions
