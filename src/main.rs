@@ -78,8 +78,17 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
     dotenv::dotenv().ok();
 
+    // set up database connection pool
+    let connspec = std::env::var("DATABASE_URL").expect("DATABASE_URL");
+    let manager = ConnectionManager::<SqliteConnection>::new(connspec);
+    let pool = r2d2::Pool::builder()
+        .build(manager)
+        .expect("Failed to create pool.");
+
+    let bind = "127.0.0.1:7000";
+
     let mut listenfd = ListenFd::from_env();
-    let mut server = HttpServer::new(|| {
+    let mut server = HttpServer::new(move || {
         // templating engine
         // add html files here so they will be compiled
         let tera = Tera::new(
@@ -87,14 +96,22 @@ async fn main() -> std::io::Result<()> {
         ).unwrap();
         
         App::new()
-            .data(AppData {tmpl: tera})
-            // .configure(characters::init_routes)
+            // set up DB pool to be used with web::Data<Pool> extractor
+            .data(pool.clone())
+            .wrap(middleware::Logger::default())
+            .service(get_character)
+            .service(add_character)
+
+            // method for binding templates for compiliation
+            // .data(AppData {tmpl: tera})
     });
 
-    server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
-        server.listen(l)?
+    server = if let Some(listener) = listenfd.take_tcp_listener(0).unwrap() {
+        println!("Server listening at: {:?}", listener);
+        server.listen(listener)?
     } else {
-        server.bind("127.0.0.1:7000")?
+        println!("Starting server at {}", &bind);
+        server.bind(&bind)?
     };
     server.run().await
 }
